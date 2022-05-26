@@ -99,5 +99,49 @@ describe('UserSignupPage', () => {
 
       expect(passwordRepeat).toHaveValue('P4ssword');
     });
+
+    it('calls postSignup when the fields are valid and the actions are provied in props', () => {
+      const actions = {
+        postSignup: jest.fn().mockResolvedValueOnce({}),
+      };
+
+      const { container, queryByPlaceholderText } = render(
+        <UserSignupPage actions={actions} />
+      );
+
+      const displayNameInput = queryByPlaceholderText('Your display name');
+      const usernameInput = queryByPlaceholderText('Your username');
+      const passwordInput = queryByPlaceholderText('Your password');
+      const passwordRepeat = queryByPlaceholderText('Repeat your password');
+
+      fireEvent.change(displayNameInput, changeEvent('my-display-name'));
+      fireEvent.change(usernameInput, changeEvent('my-user-name'));
+      fireEvent.change(passwordInput, changeEvent('P4ssword'));
+      fireEvent.change(passwordRepeat, changeEvent('P4ssword'));
+
+      const button = container.querySelector('button');
+
+      fireEvent.click(button);
+
+      expect(actions.postSignup).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not throw exception when clicking the button when actions not provided in props', () => {
+      const { container, queryByPlaceholderText } = render(<UserSignupPage />);
+
+      const displayNameInput = queryByPlaceholderText('Your display name');
+      const usernameInput = queryByPlaceholderText('Your username');
+      const passwordInput = queryByPlaceholderText('Your password');
+      const passwordRepeat = queryByPlaceholderText('Repeat your password');
+
+      fireEvent.change(displayNameInput, changeEvent('my-display-name'));
+      fireEvent.change(usernameInput, changeEvent('my-user-name'));
+      fireEvent.change(passwordInput, changeEvent('P4ssword'));
+      fireEvent.change(passwordRepeat, changeEvent('P4ssword'));
+
+      const button = container.querySelector('button');
+
+      expect(() => fireEvent.click(button)).not.toThrow();
+    });
   });
 });
