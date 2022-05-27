@@ -2,16 +2,17 @@ import React from 'react';
 
 export class UserSignupPage extends React.Component {
   state = {
-    dipslayName: '',
+    displayName: '',
     username: '',
     password: '',
     passwordRepeat: '',
+    pendingApiCall: false,
   };
 
   onChangeDisplayname = (event) => {
     const value = event.target.value;
     this.setState({
-      dipslayName: value,
+      displayName: value,
     });
   };
 
@@ -39,10 +40,18 @@ export class UserSignupPage extends React.Component {
   onClickSignup = () => {
     const user = {
       username: this.state.username,
-      displayName: this.state.dipslayName,
+      displayName: this.state.displayName,
       password: this.state.password,
     };
-    this.props.actions.postSignup(user);
+    this.setState({ pendingApiCall: true });
+    this.props.actions
+      .postSignup(user)
+      .then((response) => {
+        this.setState({ pendingApiCall: false });
+      })
+      .catch((error) => {
+        this.setState({ pendingApiCall: false });
+      });
   };
 
   render() {
@@ -54,7 +63,7 @@ export class UserSignupPage extends React.Component {
           <input
             className="form-control"
             placeholder="Your display name"
-            value={this.state.dipslayName}
+            value={this.state.displayName}
             onChange={this.onChangeDisplayname}
           />
         </div>
@@ -88,7 +97,19 @@ export class UserSignupPage extends React.Component {
           />
         </div>
         <div className="text-center">
-          <button className="btn btn-primary" onClick={this.onClickSignup}>
+          <button
+            className="btn btn-primary"
+            onClick={this.onClickSignup}
+            disabled={this.state.pendingApiCall}
+          >
+            {this.state.pendingApiCall && (
+              <div
+                className="spinner-border text-light spinner-border-sm mr-sm-1"
+                role="status"
+              >
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            )}
             Sign Up
           </button>
         </div>
