@@ -50,7 +50,7 @@ export class UserSignupPage extends React.Component {
       <div className="container">
         <h1 className="text-center">Sign Up</h1>
         <div className="col-12 mb-3">
-          <labe>Display Name</labe>
+          <label>Display Name</label>
           <input
             className="form-control"
             placeholder="Your display name"
