@@ -1,4 +1,5 @@
 import React from 'react';
+import Input from '../components/Input';
 
 export class UserSignupPage extends React.Component {
   state = {
@@ -7,9 +8,10 @@ export class UserSignupPage extends React.Component {
     password: '',
     passwordRepeat: '',
     pendingApiCall: false,
+    errors: {},
   };
 
-  onChangeDisplayname = (event) => {
+  onChangeDisplayName = (event) => {
     const value = event.target.value;
     this.setState({
       displayName: value,
@@ -49,8 +51,14 @@ export class UserSignupPage extends React.Component {
       .then((response) => {
         this.setState({ pendingApiCall: false });
       })
-      .catch((error) => {
-        this.setState({ pendingApiCall: false });
+      .catch((apiError) => {
+        let errors = { ...this.state.errors };
+        // check if there is response and if that error response has data in it
+        if (apiError.response.data && apiError.response.data.validationErrors) {
+          // copy errors
+          errors = { ...apiError.response.data.validationErrors };
+        }
+        this.setState({ pendingApiCall: false, errors });
       });
   };
 
@@ -59,41 +67,45 @@ export class UserSignupPage extends React.Component {
       <div className="container">
         <h1 className="text-center">Sign Up</h1>
         <div className="col-12 mb-3">
-          <label>Display Name</label>
-          <input
-            className="form-control"
+          <Input
+            label="Display Name"
             placeholder="Your display name"
             value={this.state.displayName}
-            onChange={this.onChangeDisplayname}
+            onChange={this.onChangeDisplayName}
+            hasError={this.state.errors.displayName && true}
+            error={this.state.errors.displayName}
           />
         </div>
         <div className="col-12 mb-3">
-          <label>Your username</label>
-          <input
-            className="form-control"
+          <Input
+            label="Your username"
             placeholder="Your username"
             value={this.state.username}
             onChange={this.onChangeUsername}
+            hasError={this.state.errors.username && true}
+            error={this.state.errors.username}
           />
         </div>
         <div className="col-12 mb-3">
-          <label>Your password</label>
-          <input
-            className="form-control"
+          <Input
+            label="Your password"
             placeholder="Your password"
             type="password"
             value={this.state.password}
             onChange={this.onChangePassword}
+            hasError={this.state.errors.password && true}
+            error={this.state.errors.password}
           />
         </div>
         <div className="col-12 mb-3">
-          <label>Repeat your password</label>
-          <input
-            className="form-control"
+          <Input
+            label="Repeat your password"
             placeholder="Repeat your password"
             type="password"
             value={this.passwordRepeat}
             onChange={this.onChangePasswordRepeat}
+            hasError={this.state.errors.passwordRepeat && true}
+            error={this.state.errors.passwordRepeat}
           />
         </div>
         <div className="text-center">
