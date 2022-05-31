@@ -6,7 +6,7 @@ import * as apiCalls from './api/apiCalls';
 
 // for demo purposes
 const actions = {
-  postSignup: apiCalls.signup,
+  postLogin: apiCalls.login,
 };
 
 // ReactDOM.render(
@@ -14,4 +14,7 @@ const actions = {
 //   document.getElementById('root')
 // );
 
-ReactDOM.render(<LoginPage />, document.getElementById('root'));
+ReactDOM.render(
+  <LoginPage actions={actions} />,
+  document.getElementById('root')
+);
