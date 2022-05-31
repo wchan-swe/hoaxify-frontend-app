@@ -1,5 +1,10 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import {
+  render,
+  fireEvent,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { LoginPage } from './LoginPage';
 
 describe('LoginPage', () => {
@@ -240,6 +245,24 @@ describe('LoginPage', () => {
       await waitFor(() => {
         const spinner = queryByText('Loading...');
         expect(spinner).not.toBeInTheDocument();
+      });
+    });
+
+    it('redirects to homePage after success login', async () => {
+      // async because we are waiting for ui changes
+      const actions = {
+        postLogin: jest.fn().mockResolvedValue({}),
+      };
+
+      const history = {
+        push: jest.fn(),
+      };
+      const { queryByText } = setupForSubmit({ actions, history });
+      fireEvent.click(button);
+
+      await waitFor(() => {
+        queryByText('Loading...');
+        expect(history.push).toHaveBeenCalledWith('/');
       });
     });
   });
