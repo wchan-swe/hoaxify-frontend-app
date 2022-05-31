@@ -5,6 +5,7 @@ import HomePage from '../pages/HomePage';
 import LoginPage from '../pages/LoginPage';
 import UserSignupPage from '../pages/UserSignupPage';
 import UserPage from '../pages/UserPage';
+import TopBar from '../components/TopBar';
 import * as apiCalls from '../api/apiCalls';
 
 const actions = {
@@ -15,6 +16,7 @@ const actions = {
 const App = () => {
   return (
     <div className="container">
+      <TopBar />
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route
