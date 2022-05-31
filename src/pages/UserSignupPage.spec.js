@@ -337,6 +337,24 @@ describe('UserSignupPage', () => {
 
       expect(errorMessage).not.toBeInTheDocument();
     });
+
+    it('redirects to homePage after success signup', async () => {
+      // async because we are waiting for ui changes
+      const actions = {
+        postSignup: jest.fn().mockResolvedValue({}),
+      };
+
+      const history = {
+        push: jest.fn(),
+      };
+      const { queryByText } = setupForSubmit({ actions, history });
+      fireEvent.click(button);
+
+      await waitFor(() => {
+        queryByText('Loading...');
+        expect(history.push).toHaveBeenCalledWith('/');
+      });
+    });
   });
 });
 
