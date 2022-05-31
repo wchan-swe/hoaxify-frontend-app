@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
 import App from './containers/App';
+import authReducer from './redux/authReducer';
+
+const store = createStore(authReducer);
 
 ReactDOM.render(
   <HashRouter>
